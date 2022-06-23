@@ -1,0 +1,181 @@
+/Users/davis/PycharmProjects/LmForGuiGeneration/venv/lib/python3.8/site-packages/h5py/__init__.py:36: UserWarning: h5py is running against HDF5 1.12.2 when it was built against 1.12.1, this may cause problems
+  _warn(("h5py is running against HDF5 {0} when it was built against {1}, "
+Enter Folder/Model Name: This is a TEST run
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #
+=================================================================
+ embedding (Embedding)       (None, 87, 8)             152
+
+ dropout (Dropout)           (None, 87, 8)             0
+
+ lstm (LSTM)                 (None, 2)                 88
+
+ dropout_1 (Dropout)         (None, 2)                 0
+
+ dense (Dense)               (None, 19)                57
+
+=================================================================
+Total params: 297
+Trainable params: 297
+Non-trainable params: 0
+_________________________________________________________________
+None
+Nr. Training Sampels: 18902
+Training Data Prepared
+Nr. Validation Sampels: 3572
+Validation Data Prepared
+
+Search: Running Trial #1
+
+Value             |Best Value So Far |Hyperparameter
+8                 |?                 |embedding_dim
+5                 |?                 |num_of_neurons
+0                 |?                 |num_of_layers
+0.01              |?                 |learning_rate
+2                 |?                 |tuner/epochs
+0                 |?                 |tuner/initial_epoch
+0                 |?                 |tuner/bracket
+0                 |?                 |tuner/round
+
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #
+=================================================================
+ embedding (Embedding)       (None, 87, 8)             152
+
+ dropout (Dropout)           (None, 87, 8)             0
+
+ lstm (LSTM)                 (None, 5)                 280
+
+ dropout_1 (Dropout)         (None, 5)                 0
+
+ dense (Dense)               (None, 19)                114
+
+=================================================================
+Total params: 546
+Trainable params: 546
+Non-trainable params: 0
+_________________________________________________________________
+None
+2022-06-01 15:29:07.347380: W tensorflow/core/platform/profile_utils/cpu_utils.cc:128] Failed to get CPU frequency: 0 Hz
+Epoch 1/2
+
+148/148 [==============================] - 8s 32ms/step - loss: 8.1083 - accuracy: 0.4902 - val_loss: 5.5665 - val_accuracy: 0.5498
+Epoch 2/2
+
+148/148 [==============================] - 4s 26ms/step - loss: 5.5690 - accuracy: 0.5693 - val_loss: 5.2487 - val_accuracy: 0.5770
+
+
+Trial 1 Complete [00h 00m 12s]
+val_loss: 5.2486677169799805
+
+Best val_loss So Far: 5.2486677169799805
+Total elapsed time: 00h 00m 12s
+
+Search: Running Trial #2
+
+Value             |Best Value So Far |Hyperparameter
+32                |8                 |embedding_dim
+5                 |5                 |num_of_neurons
+0                 |0                 |num_of_layers
+0.01              |0.01              |learning_rate
+2                 |2                 |tuner/epochs
+0                 |0                 |tuner/initial_epoch
+0                 |0                 |tuner/bracket
+0                 |0                 |tuner/round
+
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #
+=================================================================
+ embedding (Embedding)       (None, 87, 32)            608
+
+ dropout (Dropout)           (None, 87, 32)            0
+
+ lstm (LSTM)                 (None, 5)                 760
+
+ dropout_1 (Dropout)         (None, 5)                 0
+
+ dense (Dense)               (None, 19)                114
+
+=================================================================
+Total params: 1,482
+Trainable params: 1,482
+Non-trainable params: 0
+_________________________________________________________________
+None
+Epoch 1/2
+
+148/148 [==============================] - 8s 33ms/step - loss: 7.2619 - accuracy: 0.5344 - val_loss: 5.1457 - val_accuracy: 0.5823
+Epoch 2/2
+
+148/148 [==============================] - 5s 33ms/step - loss: 5.2102 - accuracy: 0.5700 - val_loss: 4.8674 - val_accuracy: 0.5843
+
+
+Trial 2 Complete [00h 00m 13s]
+val_loss: 4.86740255355835
+
+Best val_loss So Far: 4.86740255355835
+Total elapsed time: 00h 00m 26s
+
+        The hyperparameter search is complete.
+        Embedding dimension: 32 .
+        Number of neurons: 5
+        Number of layers:1
+        Learning rate:0.01
+
+Model: "sequential_1"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #
+=================================================================
+ embedding_1 (Embedding)     (None, 87, 32)            608
+
+ dropout_2 (Dropout)         (None, 87, 32)            0
+
+ lstm_1 (LSTM)               (None, 5)                 760
+
+ dropout_3 (Dropout)         (None, 5)                 0
+
+ dense_1 (Dense)             (None, 19)                114
+
+=================================================================
+Total params: 1,482
+Trainable params: 1,482
+Non-trainable params: 0
+_________________________________________________________________
+None
+Epoch 1/2
+
+148/148 [==============================] - 9s 35ms/step - loss: 7.2935 - accuracy: 0.5316 - val_loss: 5.2471 - val_accuracy: 0.5770
+Epoch 2/2
+
+148/148 [==============================] - 4s 28ms/step - loss: 5.2184 - accuracy: 0.5800 - val_loss: 4.7943 - val_accuracy: 0.5823
+Best epoch: 2
+Model: "sequential_2"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #
+=================================================================
+ embedding_2 (Embedding)     (None, 87, 32)            608
+
+ dropout_4 (Dropout)         (None, 87, 32)            0
+
+ lstm_2 (LSTM)               (None, 5)                 760
+
+ dropout_5 (Dropout)         (None, 5)                 0
+
+ dense_2 (Dense)             (None, 19)                114
+
+=================================================================
+Total params: 1,482
+Trainable params: 1,482
+Non-trainable params: 0
+_________________________________________________________________
+None
+Epoch 1/2
+
+148/148 [==============================] - 9s 32ms/step - loss: 7.4938 - accuracy: 0.5194 - val_loss: 5.3539 - val_accuracy: 0.5770
+Epoch 2/2
+
+148/148 [==============================] - 4s 28ms/step - loss: 5.5240 - accuracy: 0.5799 - val_loss: 5.3162 - val_accuracy: 0.5770
+Model Completed

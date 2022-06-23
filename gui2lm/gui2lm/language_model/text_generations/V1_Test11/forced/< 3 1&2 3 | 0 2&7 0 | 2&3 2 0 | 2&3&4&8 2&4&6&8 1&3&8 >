@@ -1,0 +1,33 @@
+
+Text generation with a forced learning and temperature sampling. 
+Sentence: < 3 1&2 3 | 0 2&7 0 | 2&3 2 0 | 2&3&4&8 2&4&6&8 1&3&8 >
+---------------------------------------------------------
+| Icon            | Text             | Icon             |
+|                 | Image            |                  |
+|                 |                  |                  |
+---------------------------------------------------------
+| Empty           | Image            | Empty            |
+|                 | BackgroundImage  |                  |
+|                 |                  |                  |
+---------------------------------------------------------
+| Image           | Image            | Empty            |
+| Icon            |                  |                  |
+|                 |                  |                  |
+---------------------------------------------------------
+| Image           | Image            | Text             |
+| Icon            | TextButton       | Icon             |
+| TextButton      | WebView          | RadioButton      |
+| RadioButton     | RadioButton      |                  |
+---------------------------------------------------------
+
+Generated with diversity 0.2: "< 1 0 2 0 0 0 2 4 1 | | 3 0 0 0 0 3 3 2 0&4 2 2 1 2 2"
+DID NOT WORK
+
+Generated with diversity 0.5: "< 1&0 0 0 0 | 0 3 1 0 0&0&0 1 0 0 3 2&> 0&2 4 0&0&4 2"
+DID NOT WORK
+
+Generated with diversity 1.0: "< 2 0 3 2 1 4 2 3 3 2 3 2 | 1&0 |00 6 4   2 3 B 3&3 3"
+DID NOT WORK
+
+Generated with diversity 1.2: "< 5 0 1 9&5 4 2 5 0 3&0 & 7 2 5&2 A&| 2 |&6 > |&2&4&>"
+DID NOT WORK

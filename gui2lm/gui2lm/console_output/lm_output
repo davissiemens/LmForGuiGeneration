@@ -1,0 +1,146 @@
+/Users/davis/PycharmProjects/LmForGuiGeneration/venv/lib/python3.8/site-packages/h5py/__init__.py:36: UserWarning: h5py is running against HDF5 1.12.2 when it was built against 1.12.1, this may cause problems
+  _warn(("h5py is running against HDF5 {0} when it was built against {1}, "
+Enter Folder/Model Name: Directory  /Users/davis/PycharmProjects/LmForGuiGeneration/gui2lm/gui2lm/language_model/text_generations/V3_Run1_Train  already exists
+Directory  /Users/davis/PycharmProjects/LmForGuiGeneration/gui2lm/gui2lm/language_model/text_generations/V3_Run1_Train/seed/  already exists
+Model: "sequential"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ embedding (Embedding)       (None, 87, 32)            608       
+                                                                 
+ dropout (Dropout)           (None, 87, 32)            0         
+                                                                 
+ lstm (LSTM)                 (None, 87, 128)           82432     
+                                                                 
+ dropout_1 (Dropout)         (None, 87, 128)           0         
+                                                                 
+ lstm_1 (LSTM)               (None, 128)               131584    
+                                                                 
+ dropout_2 (Dropout)         (None, 128)               0         
+                                                                 
+ dense (Dense)               (None, 19)                2451      
+                                                                 
+=================================================================
+Total params: 217,075
+Trainable params: 217,075
+Non-trainable params: 0
+_________________________________________________________________
+None
+
+...Diversity: 0.2
+...Generating with seed: "<"
+2022-06-20 13:17:16.406508: W tensorflow/core/platform/profile_utils/cpu_utils.cc:128] Failed to get CPU frequency: 0 Hz
+/Users/davis/PycharmProjects/LmForGuiGeneration/gui2lm/gui2lm/language_model/languagemodel_with_hypertuning_V2.py:27: RuntimeWarning: divide by zero encountered in log
+  preds = np.log(preds) / temperature
+...Sentence :  < 2 1 3 | 0 0 0 | 0 6 0 | 0 0 0 >
+...Generated:  < 1&2&3 1&2 1&2&3 | 1&2&3 1&2&3 1&2&3 | 1&2&3 1&2 1&2 | 1&2&3 1&2&3 1&2&3 >
+...Diversity: 0.5
+...Generating with seed: "<"
+...Sentence :  < 2 1 3 | 0 0 0 | 0 6 0 | 0 0 0 >
+...Generated:  < 1&3 1&2&4 1&2 | 0 1&2 0 | 1 1 0 | 1 1&2&6 1 >
+...Diversity: 1.0
+...Generating with seed: "<"
+...Sentence :  < 2 1 3 | 0 0 0 | 0 6 0 | 0 0 0 >
+...Generated:  < 0 0 0 | 0 1&2 0 | 0 1&2 0 | 0 0 0 >
+...Diversity: 1.2
+...Generating with seed: "<"
+...Sentence :  < 2 1 3 | 0 0 0 | 0 6 0 | 0 0 0 >
+...Generated:  < 0 2 0 | 0 1 0 | 0 1&2 0 | 0 2 0 >
+Directory  /Users/davis/PycharmProjects/LmForGuiGeneration/gui2lm/gui2lm/language_model/text_generations/V3_Run1_Train  already exists
+Directory  /Users/davis/PycharmProjects/LmForGuiGeneration/gui2lm/gui2lm/language_model/text_generations/V3_Run1_Train/seed/  already exists
+Model: "sequential_1"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ embedding_1 (Embedding)     (None, 87, 32)            608       
+                                                                 
+ dropout_3 (Dropout)         (None, 87, 32)            0         
+                                                                 
+ lstm_2 (LSTM)               (None, 87, 128)           82432     
+                                                                 
+ dropout_4 (Dropout)         (None, 87, 128)           0         
+                                                                 
+ lstm_3 (LSTM)               (None, 128)               131584    
+                                                                 
+ dropout_5 (Dropout)         (None, 128)               0         
+                                                                 
+ dense_1 (Dense)             (None, 19)                2451      
+                                                                 
+=================================================================
+Total params: 217,075
+Trainable params: 217,075
+Non-trainable params: 0
+_________________________________________________________________
+None
+
+...Diversity: 0.2
+...Generating with seed: "< 2"
+WARNING:tensorflow:Detecting that an object or model or tf.train.Checkpoint is being deleted with unrestored values. See the following logs for the specific values in question. To silence these warnings, use `status.expect_partial()`. See https://www.tensorflow.org/api_docs/python/tf/train/Checkpoint#restorefor details about the status object returned by the restore function.
+WARNING:tensorflow:Value in checkpoint could not be found in the restored object: (root).optimizer.iter
+WARNING:tensorflow:Value in checkpoint could not be found in the restored object: (root).optimizer.decay
+WARNING:tensorflow:Value in checkpoint could not be found in the restored object: (root).optimizer.learning_rate
+WARNING:tensorflow:Value in checkpoint could not be found in the restored object: (root).optimizer.momentum
+WARNING:tensorflow:Value in checkpoint could not be found in the restored object: (root).optimizer.rho
+...Sentence :  < 2 1 3 | 0 0 0 | 0 6 0 | 0 0 0 >
+...Generated:  < 2&3 1&2 3 | 0 0 0 | 0 6 0 | 0 0 0 >
+...Diversity: 0.5
+...Generating with seed: "< 2"
+...Sentence :  < 2 1 3 | 0 0 0 | 0 6 0 | 0 0 0 >
+...Generated:  < 2&3 1 3 | 1&2&3 1 0 | 1&2&3 1 0 | 1&2&3 1 0 >
+...Diversity: 1.0
+...Generating with seed: "< 2"
+...Sentence :  < 2 1 3 | 0 0 0 | 0 6 0 | 0 0 0 >
+...Generated:  < 2&3&4 1&3&4 2&3&4 | 1 0 3 | 2 1 3 | 0 0 0 >
+...Diversity: 1.2
+...Generating with seed: "< 2"
+...Sentence :  < 2 1 3 | 0 0 0 | 0 6 0 | 0 0 0 >
+...Generated:  < 2 0 3 | 0 0 0 | 0 0 0 | 0 0 0 >
+Directory  /Users/davis/PycharmProjects/LmForGuiGeneration/gui2lm/gui2lm/language_model/text_generations/V3_Run1_Train  already exists
+Directory  /Users/davis/PycharmProjects/LmForGuiGeneration/gui2lm/gui2lm/language_model/text_generations/V3_Run1_Train/seed/  already exists
+Model: "sequential_2"
+_________________________________________________________________
+ Layer (type)                Output Shape              Param #   
+=================================================================
+ embedding_2 (Embedding)     (None, 87, 32)            608       
+                                                                 
+ dropout_6 (Dropout)         (None, 87, 32)            0         
+                                                                 
+ lstm_4 (LSTM)               (None, 87, 128)           82432     
+                                                                 
+ dropout_7 (Dropout)         (None, 87, 128)           0         
+                                                                 
+ lstm_5 (LSTM)               (None, 128)               131584    
+                                                                 
+ dropout_8 (Dropout)         (None, 128)               0         
+                                                                 
+ dense_2 (Dense)             (None, 19)                2451      
+                                                                 
+=================================================================
+Total params: 217,075
+Trainable params: 217,075
+Non-trainable params: 0
+_________________________________________________________________
+None
+
+...Diversity: 0.2
+...Generating with seed: "< 0"
+WARNING:tensorflow:Detecting that an object or model or tf.train.Checkpoint is being deleted with unrestored values. See the following logs for the specific values in question. To silence these warnings, use `status.expect_partial()`. See https://www.tensorflow.org/api_docs/python/tf/train/Checkpoint#restorefor details about the status object returned by the restore function.
+WARNING:tensorflow:Value in checkpoint could not be found in the restored object: (root).optimizer.iter
+WARNING:tensorflow:Value in checkpoint could not be found in the restored object: (root).optimizer.decay
+WARNING:tensorflow:Value in checkpoint could not be found in the restored object: (root).optimizer.learning_rate
+WARNING:tensorflow:Value in checkpoint could not be found in the restored object: (root).optimizer.momentum
+WARNING:tensorflow:Value in checkpoint could not be found in the restored object: (root).optimizer.rho
+...Sentence :  < 2 1 3 | 0 0 0 | 0 6 0 | 0 0 0 >
+...Generated:  < 0 0 0 | 0 0 0 | 0 0 0 | 0 0 0 >
+...Diversity: 0.5
+...Generating with seed: "< 0"
+...Sentence :  < 2 1 3 | 0 0 0 | 0 6 0 | 0 0 0 >
+...Generated:  < 0 0 0 | 0 0 0 | 0 0 0 | 0 0 0 >
+...Diversity: 1.0
+...Generating with seed: "< 0"
+...Sentence :  < 2 1 3 | 0 0 0 | 0 6 0 | 0 0 0 >
+...Generated:  < 0 0 0 | 0 2 0 | 0 1 0 | 3 1&3 0 >
+...Diversity: 1.2
+...Generating with seed: "< 0"
+...Sentence :  < 2 1 3 | 0 0 0 | 0 6 0 | 0 0 0 >
+...Generated:  < 0 1&2 3 | 0 1&4 0 | 2 2 0 | 3&4 2&3&3 3 >

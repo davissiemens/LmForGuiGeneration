@@ -1,0 +1,40 @@
+
+Text generation with a forced learning and temperature sampling. 
+Sentence: < 3&5 1 3 | 0 0 0 | 2 0 2&3 | 2 6 0 >
+---------------------------------------------------------
+| Icon            | Text             | Icon             |
+| Input           |                  |                  |
+|                 |                  |                  |
+---------------------------------------------------------
+| Empty           | Empty            | Empty            |
+|                 |                  |                  |
+|                 |                  |                  |
+---------------------------------------------------------
+| Image           | Empty            | Image            |
+|                 |                  | Icon             |
+|                 |                  |                  |
+---------------------------------------------------------
+| Image           | WebView          | Empty            |
+|                 |                  |                  |
+|                 |                  |                  |
+---------------------------------------------------------
+
+Generated with diversity 0.2: "< 0 3 0 0 0 0 1 0 0 1 0 0 4 0 | | 1"
+DID NOT WORK
+
+Generated with diversity 0.5: "< 2&> 0 0 0 0 0 0 1 0 0 1&3 1 0 0 3"
+DID NOT WORK
+
+Generated with diversity 1.0: "< 5&2&0 3 2 0 1 0 4 2 0 >&3 1 0 1 5"
+DID NOT WORK
+
+Generated with diversity 1.2: "<4>&7 0 1 4 1 | 6&3 0 5 4 6&9 3 6 3"
+---------------------------------------------------------
+| TextButton      | Empty            | Text             | TextButton       | Text             |
+| BackgroundImage |                  |                  |                  |                  |
+|                 |                  |                  |                  |                  |
+---------------------------------------------------------
+| WebView         | Empty            | Input            | TextButton       | WebView          | Icon             | WebView          | Icon             |
+| Icon            |                  |                  |                  | PagerIndicator   |                  |                  |                  |
+|                 |                  |                  |                  |                  |                  |                  |                  |
+---------------------------------------------------------
