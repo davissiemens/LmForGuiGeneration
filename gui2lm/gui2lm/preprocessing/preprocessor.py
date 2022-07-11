@@ -1,5 +1,6 @@
 import io
 import json
+import os
 import random
 
 import numpy as np
@@ -122,6 +123,7 @@ class Preprocessor:
 
         for file_name in utils.iter_files_in_dir(dataset, ending='.json'):
             with open(dataset + file_name, 'r', encoding='utf8') as file_1:
+                print(file_name)
                 ui_json = json.load(file_1)
                 # filter advertisements
                 if conf.filter_guis & ui_json["metadata"]["is_advertisement"]:
@@ -147,6 +149,18 @@ class Preprocessor:
                                                [int(number_guis * 0.7), int(number_guis * 0.85)])
 
         # Write dataset to files
+        try:
+            # Create target Directory
+            os.mkdir(conf.path_preproc_text + "Y" + str(conf.number_splits_y) + "X" + str(
+                conf.number_splits_x) + "_readable/")
+            os.mkdir(conf.path_preproc_text + "Y" + str(conf.number_splits_y) + "X" + str(
+                conf.number_splits_x) + "")
+            print("Directory ", conf.path_abstraction + "Y" + str(conf.number_splits_y) + "X" + str(
+                conf.number_splits_x), " Created ")
+        except FileExistsError:
+            print("Directory ", conf.path_abstraction + "Y" + str(conf.number_splits_y) + "X" + str(
+                conf.number_splits_x),
+                  " already exists")
         with open(conf.path_preproc_text + "Y" + str(conf.number_splits_y) + "X" + str(
                 conf.number_splits_x) + "_readable/train", 'w') as write_f:
             for element in r_train:

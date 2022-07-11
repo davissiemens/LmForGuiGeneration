@@ -1,10 +1,12 @@
 import json
 import logging
+import os
 from typing import Text, List
 
 from gui2lm.gui2lm import utils
+from gui2lm.gui2lm.configuration.conf import Configuration
 from gui2lm.gui2lm.data_abstracting.guiclasses.abstracted_gui_classes import AbstractedGui
-from gui2lm.gui2lm.configuration import Configuration
+
 from gui2lm.gui2lm.data_abstracting.exceptions.bounds_beyond_gui import BoundsBeyondGui
 from gui2lm.gui2lm.data_abstracting.exceptions.bounds_in_minus import BoundsInMinus
 from gui2lm.gui2lm.data_abstracting.exceptions.gui_size_errors import GuiSizeError
@@ -47,6 +49,16 @@ class Abstractor:
             try:
                 gui = Gui(file_name, ui_json_semantic["bounds"], all_leafs)
                 abstracted_gui = AbstractedGui(gui, conf, int(file_name.split('.')[0]), filter)
+                try:
+                    # Create target Directory
+                    os.mkdir(conf.path_abstraction + "Y" + str(conf.number_splits_y) + "X" + str(
+                        conf.number_splits_x))
+                    print("Directory ", conf.path_abstraction + "Y" + str(conf.number_splits_y) + "X" + str(
+                        conf.number_splits_x), " Created ")
+                except FileExistsError:
+                    print("Directory ", conf.path_abstraction + "Y" + str(conf.number_splits_y) + "X" + str(
+                        conf.number_splits_x),
+                          " already exists")
                 with open(conf.path_abstraction + "Y" + str(conf.number_splits_y) + "X" + str(
                         conf.number_splits_x) + "/" + file_name, 'w') \
                         as write_f:

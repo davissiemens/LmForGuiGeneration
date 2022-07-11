@@ -4,10 +4,10 @@ from typing import Text, Optional, List
 
 class Configuration():
     # TODO Change project directory before runnning
-    PATH_ROOT = "/gui2lm/gui2lm/"
+    PATH_ROOT = "/Users/davis/PycharmProjects/LmForGuiGeneration/gui2lm/gui2lm/"
 
     def __init__(self, path_guis: Optional[Text] = os.path.join(PATH_ROOT, 'resources/combined_small/'),
-                 path_trained_models: Optional[Text] = os.path.join(PATH_ROOT, 'models/'),
+                 path_trained_models: Optional[Text] = os.path.join(PATH_ROOT, 'models/test'),
                  path_semantic: Optional[Text] = os.path.join(PATH_ROOT, "resources/semantic_annotations_small/"),
                  path_semantic_all: Optional[Text] = os.path.join(PATH_ROOT, "resources/semantic_annotations/"),
                  path_abstractions: Optional[Text] = os.path.join(PATH_ROOT, "resources/abstractions/"),
@@ -16,7 +16,7 @@ class Configuration():
                  path_preproc_text_small: Optional[Text] = os.path.join(PATH_ROOT, "resources/preprocessed_small/"),
                  path_app_details: Optional[Text] = os.path.join(PATH_ROOT, "resources/app_details.csv"),
                  path_ui_details: Optional[Text] = os.path.join(PATH_ROOT, "resources/ui_details.csv"),
-                 path_models: Optional[Text] = '/models',
+                 path_models: Optional[Text] = 'models/test',
                  filter_guis: Optional[bool] = True,
                  number_splits_x: Optional[int] = 3,
                  number_splits_y: Optional[int] = 4):

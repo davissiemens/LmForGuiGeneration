@@ -1,8 +1,6 @@
-# GUI Retrieval Overview
+# GUI Generation via Language Modeling 
 
-In this part of the repository, we provide all code files of our Python-based GUI retrieval framework. This includes the
-different GUI retrieval models and the GUI retrieval evaluation pipeline presented in the paper. In the following, we
-provide a brief description of the different packages contained in the GUI retrieval code submission:
+
 
 - **preprocessing**: Contains the Python scripts that are related to text preprocessing (preprocess.py), text
   extraction (extraction.py) and filtering (filter.py)
