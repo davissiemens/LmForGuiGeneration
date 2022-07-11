@@ -20,7 +20,6 @@ class Gui():
         self.filename = file_name
         self.bounds = bounds
         self.elements = self.normalizeBounds(elements)
-        # self.elements = elements
 
     def print(self):
         print(self.filename)

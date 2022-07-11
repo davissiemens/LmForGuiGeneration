@@ -10,7 +10,7 @@ from keras import layers
 from keras.utils import np_utils
 from tensorflow import keras
 
-from gui2lm.gui2lm.data_abstracting.configuration.conf import Configuration
+from gui2lm.gui2lm.configuration import Configuration
 # load ascii text and covert to lowercase
 from gui2lm.gui2lm.preprocessing.tokens import Tokens
 

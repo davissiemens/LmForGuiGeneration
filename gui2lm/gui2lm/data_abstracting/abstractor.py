@@ -4,7 +4,7 @@ from typing import Text, List
 
 from gui2lm.gui2lm import utils
 from gui2lm.gui2lm.data_abstracting.guiclasses.abstracted_gui_classes import AbstractedGui
-from gui2lm.gui2lm.data_abstracting.configuration.conf import Configuration
+from gui2lm.gui2lm.configuration import Configuration
 from gui2lm.gui2lm.data_abstracting.exceptions.bounds_beyond_gui import BoundsBeyondGui
 from gui2lm.gui2lm.data_abstracting.exceptions.bounds_in_minus import BoundsInMinus
 from gui2lm.gui2lm.data_abstracting.exceptions.gui_size_errors import GuiSizeError
@@ -14,6 +14,7 @@ from gui2lm.gui2lm.data_abstracting.filter import Filter
 logging.getLogger().setLevel(logging.INFO)
 
 
+# Abstractor class to abstract semantic dataset into grid representations
 class Abstractor:
     def __init__(self):
         self.filter_count_cat = 0
@@ -63,11 +64,6 @@ class Abstractor:
                 # The GUI does not have a defined width or height
                 self.json_parse_errors += 1
                 print("AN ERROR OCCURED: GUI-SIZE-ERROR")
-
-        # except:
-        #     self.json_parse_errors += 1
-        #     print("AN ERROR OCCURED")
-        #     return None
 
     def getLeaf(self, json: Text, all_leafs: List[GuiElement]) -> None:
         childs_not_none = "children" in json

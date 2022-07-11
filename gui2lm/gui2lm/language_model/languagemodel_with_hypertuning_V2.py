@@ -13,7 +13,7 @@ from keras.utils import np_utils
 from keras_tuner import Hyperband
 from tensorflow import keras
 
-from gui2lm.gui2lm.data_abstracting.configuration.conf import Configuration
+from gui2lm.gui2lm.configuration.conf import Configuration
 from gui2lm.gui2lm.preprocessing.tokens import Tokens
 
 TOKENS__INT_CHAR = Tokens().int2char()
@@ -23,6 +23,7 @@ MAX_LENGTH_GUI_REPRESENTATION = 87
 
 def sample(preds, temperature=1.0):
     # helper function to sample an index from a probability array
+    # source: https://medium.com/mlearning-ai/text-generation-in-deep-learning-with-tensorflow-keras-f7cfd8d65d9e
     preds = np.asarray(preds).astype("float64")
     preds = np.log(preds) / temperature
     exp_preds = np.exp(preds)
@@ -31,18 +32,18 @@ def sample(preds, temperature=1.0):
     return np.argmax(probas)
 
 
-def perplexity(y_true, y_pred):
-    # https://www.tensorflow.org/api_docs/python/tf/keras/metrics/CategoricalCrossentropy
-    cross_entropy = tf.keras.losses.categorical_crossentropy(y_true, y_pred)
+# def perplexity(y_true, y_pred):
+#     # https://www.tensorflow.org/api_docs/python/tf/keras/metrics/CategoricalCrossentropy
+#     cross_entropy = tf.keras.losses.categorical_crossentropy(y_true, y_pred)
+#
+#     # https://en.wikipedia.org/wiki/Perplexity: "The perplexity is independent of the base, provided that the entropy and the exponentiation use the same base."
+#     # Keras uses natural log to calculate cross-entropy like a lot of deep learning frameworks: https://github.com/keras-team/keras/blob/07e13740fd181fc3ddec7d9a594d8a08666645f6/keras/backend.py#L5075
+#
+#     # Another source for cross-entropy to perplexity: https://isl.anthropomatik.kit.edu/downloads/MA_Michael_Koch.pdf
+#     return tf.exp(tf.reduce_mean(cross_entropy))
 
-    # https://en.wikipedia.org/wiki/Perplexity: "The perplexity is independent of the base, provided that the entropy and the exponentiation use the same base."
-    # Keras uses natural log to calculate cross-entropy like a lot of deep learning frameworks: https://github.com/keras-team/keras/blob/07e13740fd181fc3ddec7d9a594d8a08666645f6/keras/backend.py#L5075
 
-    # Another source for cross-entropy to perplexity: https://isl.anthropomatik.kit.edu/downloads/MA_Michael_Koch.pdf
-    return tf.exp(tf.reduce_mean(cross_entropy))
-    # return tf.exp(cross_entropy)
-
-
+# build model function used for hyperparameter tuning
 def build_model_for_param_search(hp):
     model = keras.Sequential()
     model.add(layers.Embedding(len(TOKENS__CHAR_INT), hp.Choice('embedding_dim', values=[8, 32, 64]),
@@ -54,18 +55,16 @@ def build_model_for_param_search(hp):
         model.add(layers.LSTM(neurons, return_sequences=True))
     model.add(Dropout(0.2))
     model.add(layers.LSTM(neurons))
-    # TODO dropout to reduce overfitting: https://jmlr.org/papers/v15/srivastava14a.html
     model.add(Dropout(0.2))
     # Softmax converts a vector of values to a probability distribution. - https://keras.io/api/layers/activations/
     model.add(layers.Dense(len(TOKENS__CHAR_INT), activation="softmax"))
 
-    # TODO optimizer
     optimizer = keras.optimizers.RMSprop(learning_rate=hp.Choice('learning_rate', values=[1e-2, 1e-3, 1e-4]))
-    model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy", perplexity])
+    model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy"])
     print(model.summary())
     return model
 
-
+# build model function
 def build_model_from_dict(dict):
     model = keras.Sequential()
     model.add(layers.Embedding(len(TOKENS__CHAR_INT), dict['embedding_dim'],
@@ -77,14 +76,12 @@ def build_model_from_dict(dict):
         model.add(layers.LSTM(neurons, return_sequences=True))
     model.add(Dropout(0.2))
     model.add(layers.LSTM(neurons))
-    # TODO dropout to reduce overfitting: https://jmlr.org/papers/v15/srivastava14a.html
     model.add(Dropout(0.2))
     # Softmax converts a vector of values to a probability distribution. - https://keras.io/api/layers/activations/
     model.add(layers.Dense(len(TOKENS__CHAR_INT), activation="softmax"))
 
-    # TODO optimizer
     optimizer = keras.optimizers.RMSprop(learning_rate=dict['learning_rate'])
-    model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy", perplexity])
+    model.compile(loss="categorical_crossentropy", optimizer=optimizer, metrics=["accuracy"])
     print(model.summary())
     return model
 
@@ -235,6 +232,7 @@ class LanguageModel_WithParamTuning:
 
             return X, y
 
+    # function to find best hyperparameter, number of epochs and afterwards train model
     def hypertune_and_train_model(self):
         # Hypertune model using keras-tuner and find best:
         #   - embedding dimension for embedding layer
@@ -243,8 +241,8 @@ class LanguageModel_WithParamTuning:
         #   - best learning rate for optimizer
 
         # see: https://www.tensorflow.org/tutorials/keras/keras_tuner
-        # User Hyperband tuner : https://medium.com/criteo-engineering/hyper-parameter-optimization-algorithms-2fe447525903
-        # TODO document
+        # Uses Hyperband tuner : https://medium.com/criteo-engineering/hyper-parameter-optimization-algorithms-2fe447525903
+        # modify "build_model_for_param_search" function to change hyperparam range
         if (self.test_run):
             print("This is a TEST run")
         self.tuner = Hyperband(build_model_for_param_search,
@@ -258,10 +256,12 @@ class LanguageModel_WithParamTuning:
         text, x, y = self.prepare_training_data()
         x_val, y_val = self.prepare_validation_data()
 
-        stop_early = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=3, mode="min")
+        # callback function for hyperparameter tuning
+        stop_early = tf.keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0.01, patience=5, mode="min")
         self.tuner.search(x, y, batch_size=batch_size, validation_data=(x_val, y_val),
                           callbacks=[stop_early])
 
+        # safe results in file
         best_hps = self.tuner.get_best_hyperparameters(num_trials=1)[0]
         with open(self.conf.PATH_ROOT + "language_model/hyper_param/" + self.folder_name + ".json", 'w') as f:
             dict = {
@@ -273,6 +273,7 @@ class LanguageModel_WithParamTuning:
             f.write(json.dumps(dict))
             f.close()
 
+        # print result on console
         self.best_values = best_hps
         string = f"""
         The hyperparameter search is complete. 
@@ -284,10 +285,11 @@ class LanguageModel_WithParamTuning:
         print(string)
 
         # Build model using prior found hyper-parameters. Then find best number of epochs to train for
-
+        # Maximum nr. of epochs is set to 30
         self.model = self.tuner.hypermodel.build(best_hps)
         log_dir = "logs/fit/epochs/" + self.folder_name
         tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+        # callback function for finding epochs
         stop_early = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=7, mode="min")
         history = self.model.fit(x, y, batch_size=batch_size, epochs=30, validation_data=(x_val, y_val),
                                  callbacks=[tensorboard_callback, stop_early])
@@ -297,7 +299,6 @@ class LanguageModel_WithParamTuning:
         print('Best epoch: %d' % (best_epoch,))
 
         # Train model once again using best hyperparam and epoch number
-
         self.model = self.tuner.hypermodel.build(best_hps)
         log_dir = "logs/fit/" + self.folder_name
         tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
@@ -308,8 +309,10 @@ class LanguageModel_WithParamTuning:
         self.model.save_weights(path2file)
         print('Model Completed')
 
+    # function to train model with hyperparameter set in gui2lm/gui2lm/language_model/hyper_param/best_hp.json
+    # Number of epochs is set to 10
     def train_model(self):
-        epochs = 30
+        epochs = 10
         batch_size = self.batch_size
         text, x, y = self.prepare_training_data()
         x_val, y_val = self.prepare_validation_data()
@@ -331,6 +334,7 @@ class LanguageModel_WithParamTuning:
         self.model.save_weights(path2file)
         print('Model Trained')
 
+    # Function to calculate test cross-entropy and accuracy
     def test_model(self):
         batch_size = self.batch_size
         x, y = self.prepare_test_data()
@@ -347,32 +351,34 @@ class LanguageModel_WithParamTuning:
         history = self.model.evaluate(x, y, batch_size=batch_size)
         print('Model Evaluated')
         print("test loss, test acc:", history)
-        # self.model.save_weights(path2file)
 
-    def train_model_and_save_after_every_epoch(self):
-        epochs = 30
-        batch_size = self.batch_size
-        text, x, y = self.prepare_training_data()
-        x_val, y_val = self.prepare_validation_data()
-        with open(self.conf.PATH_ROOT + "language_model/hyper_param/best_hp.json") as f:
-            parameters = json.load(f)
-            self.model = build_model_from_dict(parameters)
-        for epoch in range(epochs):
-            try:
-                # Create target Directory
-                os.mkdir(self.directory)
-                print("Directory ", self.directory, " Created ")
-            except FileExistsError:
-                print("Directory ", self.directory, " already exists")
-            path2file = self.directory + self.name + "_epoch_" + str(epoch)
-            self.model.save_weights(path2file)
-            log_dir = "logs/fit/" + self.folder_name
-            tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
-            history = self.model.fit(x, y, batch_size=batch_size, epochs=epochs, validation_data=(x_val, y_val),
-                                     callbacks=[tensorboard_callback])
-            self.model.save_weights(path2file)
-            print('Epoch ' + str(epoch) + "")
+    # different training function to save model after every epoch, but that does not log learning curve
 
+    # def train_model_and_save_after_every_epoch(self):
+    #     epochs = 30
+    #     batch_size = self.batch_size
+    #     text, x, y = self.prepare_training_data()
+    #     x_val, y_val = self.prepare_validation_data()
+    #     with open(self.conf.PATH_ROOT + "language_model/hyper_param/best_hp.json") as f:
+    #         parameters = json.load(f)
+    #         self.model = build_model_from_dict(parameters)
+    #     for epoch in range(epochs):
+    #         try:
+    #             # Create target Directory
+    #             os.mkdir(self.directory)
+    #             print("Directory ", self.directory, " Created ")
+    #         except FileExistsError:
+    #             print("Directory ", self.directory, " already exists")
+    #         path2file = self.directory + self.name + "_epoch_" + str(epoch)
+    #         self.model.save_weights(path2file)
+    #         log_dir = "logs/fit/" + self.folder_name
+    #         tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+    #         history = self.model.fit(x, y, batch_size=batch_size, epochs=epochs, validation_data=(x_val, y_val),
+    #                                  callbacks=[tensorboard_callback])
+    #         self.model.save_weights(path2file)
+    #         print('Epoch ' + str(epoch) + "")
+
+    # generate text via NLG approach
     def generating_text(self, seed: Text, actual_sentence: Text):
         with open(self.conf.PATH_ROOT + "language_model/hyper_param/best_hp.json") as f:
             parameters = json.load(f)
@@ -412,103 +418,7 @@ class LanguageModel_WithParamTuning:
             returns[diversity] = generated
         return returns
 
-    def generating_text_forced_teaching(self, sentence: Text):
-        with open(self.conf.PATH_ROOT + "language_model/hyper_param/best_hp.json") as f:
-            parameters = json.load(f)
-            self.model = build_model_from_dict(parameters)
-        self.model.load_weights(self.directory + self.name)
-        print()
-        returns = {}
-
-        for diversity in [0.2, 0.5, 1.0, 1.2]:
-            print("...Diversity:", diversity)
-
-            seed = Tokens().token2char[Tokens().start_token].ljust(MAX_LENGTH_GUI_REPRESENTATION, "_")
-            generated = Tokens().token2char[Tokens().start_token]
-
-            print('...Forced teaching with Sentence: "' + sentence + '"')
-
-            next_char = ""
-            # prevent and endless loop
-            i = 2
-
-            pattern = [[TOKENS__CHAR_INT[char] for char in seed]]
-            #  TODO DEBUG
-            while sentence[i] != Tokens().token2char[Tokens.end_token]:
-                x = numpy.reshape(pattern, (1, MAX_LENGTH_GUI_REPRESENTATION, 1))
-                prediction = self.model.predict(x, verbose=0)
-                next_index = sample(prediction, diversity)
-                next_char = TOKENS__INT_CHAR[next_index]
-                generated += next_char
-
-                seed = sentence[0:i].ljust(MAX_LENGTH_GUI_REPRESENTATION, "_")
-                pattern = [[TOKENS__CHAR_INT[char] for char in seed]]
-
-                i += 1
-
-            print()
-            print("...Sentence : ", sentence)
-            print("...Generated: ", generated)
-            print()
-            print()
-            returns[diversity] = generated
-
-        return returns
-
-    def generating_text_forced_teaching_v2(self, sentence: Text):
-        with open(self.conf.PATH_ROOT + "language_model/hyper_param/best_hp.json") as f:
-            parameters = json.load(f)
-            self.model = build_model_from_dict(parameters)
-        self.model.load_weights(self.directory + self.name)
-        print()
-        returns = {}
-
-        for diversity in [0.2, 0.5, 1.0, 1.2]:
-            print("...Diversity:", diversity)
-
-            seed = Tokens().token2char[Tokens().start_token].ljust(MAX_LENGTH_GUI_REPRESENTATION, "_")
-            generated = Tokens().token2char[Tokens().start_token]
-
-            print('...Forced teaching with Sentence: "' + sentence + '"')
-
-            next_char_pred = ""
-            next_char = " "
-            # prevent and endless loop
-            i = 2
-
-            pattern = [[TOKENS__CHAR_INT[char] for char in seed]]
-            #  TODO DEBUG
-            while sentence[i] != Tokens().token2char[Tokens.end_token]:
-                x = numpy.reshape(pattern, (1, MAX_LENGTH_GUI_REPRESENTATION, 1))
-                prediction = self.model.predict(x, verbose=0)
-                next_index = sample(prediction, diversity)
-                next_char_pred = TOKENS__INT_CHAR[next_index]
-
-                if (next_char_pred == " ") & (next_char != " "):
-                    while next_char != " ":
-                        i += 1
-                        next_char = sentence[i]
-
-                if (next_char_pred != " ") & (next_char == " "):
-                    while next_char_pred != " ":
-                        generated += next_char_pred
-
-                        seed = generated.ljust(MAX_LENGTH_GUI_REPRESENTATION, "_")
-                        pattern = [[TOKENS__CHAR_INT[char] for char in seed]]
-
-                        x = numpy.reshape(pattern, (1, MAX_LENGTH_GUI_REPRESENTATION, 1))
-                        prediction = self.model.predict(x, verbose=0)
-                        next_index = sample(prediction, diversity)
-                        next_char_pred = TOKENS__INT_CHAR[next_index]
-
-                generated += next_char_pred
-
-                seed = sentence[0:i].ljust(MAX_LENGTH_GUI_REPRESENTATION, "_")
-                pattern = [[TOKENS__CHAR_INT[char] for char in seed]]
-
-                i += 1
-                next_char = sentence[i]
-
+    # generate text via forced teaching
     def generating_text_forced_teaching_v3(self, sentence: Text):
         with open(self.conf.PATH_ROOT + "language_model/hyper_param/best_hp.json") as f:
             parameters = json.load(f)
@@ -517,7 +427,7 @@ class LanguageModel_WithParamTuning:
         print()
         returns = {}
 
-        for diversity in [0.2, 0.5, 1.0, 1.2]:
+        for diversity in [0.2, 0.5, 1.0]:
             print("...Diversity:", diversity)
 
             cubes = sentence.split(Tokens().token2char[Tokens().split])

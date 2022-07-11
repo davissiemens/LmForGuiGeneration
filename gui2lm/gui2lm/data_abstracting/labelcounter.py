@@ -7,12 +7,12 @@ from parsel import Selector
 from collections import Counter
 import csv
 
-from gui2lm.gui2lm.data_abstracting.configuration.conf import Configuration
+from gui2lm.gui2lm.configuration.conf import Configuration
 from gui2lm.gui2lm.data_abstracting.filter import Filter
 
 logging.getLogger().setLevel(logging.INFO)
 
-
+# Class to count component classes (Icons, Images, ...) in the dataset
 class LabelCounter():
     def __init__(self):
         self.json_read_error = 0

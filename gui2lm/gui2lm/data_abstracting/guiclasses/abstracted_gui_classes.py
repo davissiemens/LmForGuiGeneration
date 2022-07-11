@@ -2,7 +2,7 @@ import math
 from collections import Counter
 from typing import List, Dict
 
-from gui2lm.gui2lm.data_abstracting.configuration.conf import Configuration
+from gui2lm.gui2lm.configuration import Configuration
 from gui2lm.gui2lm.data_abstracting.exceptions.bounds_beyond_gui import BoundsBeyondGui
 from gui2lm.gui2lm.data_abstracting.exceptions.bounds_in_minus import BoundsInMinus
 from gui2lm.gui2lm.data_abstracting.guiclasses.gui_classes import Gui, GuiElement, LeafElementType

@@ -1,11 +1,10 @@
 import os
 from typing import Text, Optional, List
-from gui2lm.gui2lm.data_abstracting.preprocess import Stemming
 
 
 class Configuration():
     # TODO Change project directory before runnning
-    PATH_ROOT = "/Users/davis/PycharmProjects/LmForGuiGeneration/gui2lm/gui2lm/"
+    PATH_ROOT = "/gui2lm/gui2lm/"
 
     def __init__(self, path_guis: Optional[Text] = os.path.join(PATH_ROOT, 'resources/combined_small/'),
                  path_trained_models: Optional[Text] = os.path.join(PATH_ROOT, 'models/'),
@@ -35,18 +34,3 @@ class Configuration():
         self.path_ui_details = path_ui_details
         self.path_models = path_models
         self.filter_guis = filter_guis
-
-    def get_desc(self) -> Text:
-        desc = self.dir_name_prefix
-        desc = desc + ('_stem_T' + self.preprocessing_stemmer) if self.preprocesing_stemmed else desc + '_stem_F'
-        desc = desc + '_stpw_T' if self.preprocesing_rm_stopwords else desc + '_stpw_F'
-        desc = desc + '_filter_T' if self.filter_guis else desc + '_filter_F'
-        desc = desc + '_uts_' + '_'.join(self.text_segments_used)
-        return desc
-
-    def get_desc_dataset(self) -> Text:
-        desc = self.dir_name_prefix
-        desc = desc + ('_stem_T' + self.preprocessing_stemmer) if self.preprocesing_stemmed else desc + '_stem_F'
-        desc = desc + '_stpw_T' if self.preprocesing_rm_stopwords else desc + '_stpw_F'
-        desc = desc + '_filter_T' if self.filter_guis else desc + '_filter_F'
-        return desc

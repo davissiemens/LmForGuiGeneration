@@ -6,7 +6,7 @@ import numpy as np
 import shutil
 
 from gui2lm.gui2lm import utils
-from gui2lm.gui2lm.data_abstracting.configuration.conf import Configuration
+from gui2lm.gui2lm.configuration.conf import Configuration
 from gui2lm.gui2lm.language_model.printer import format_to_pretty_print_without_compare
 from gui2lm.gui2lm.preprocessing.tokens import Tokens
 
@@ -18,6 +18,7 @@ class Preprocessor:
         self.token_config = tokens
         self.count_filter = 0
 
+    # method to preprocess only one GUI
     def preprocess_abstracted_gui(self, gui_number: int):
         dataset = self.conf.path_abstraction + "Y" + str(self.conf.number_splits_y) \
                   + "X" + str(self.conf.number_splits_x) + "/"
@@ -48,6 +49,7 @@ class Preprocessor:
                     file_names.append(file_name)
         return file_names
 
+    # method to count component classes in test data set
     def count_test_data(self, print_data=False):
         filename = "Y" + str(self.conf.number_splits_y) + "X" + str(self.conf.number_splits_x) + "/test"
         with io.open(self.conf.path_preproc_text + filename, encoding="utf-8") as f:
@@ -76,25 +78,6 @@ class Preprocessor:
                             count += 1
             print(count)
             return count
-
-            # for j in range(0, len(gui_list)):
-            #     for i in range(1, len(gui_list[j])):
-            #         gui_subpart = gui_list[j][0: i].ljust(MAX_LENGTH_GUI_REPRESENTATION, "_")
-            #         sentence_list.append(gui_subpart)
-            #         next_chars_list.append(gui_list[j][i])
-            #
-            #         dataX.append([TOKENS__CHAR_INT[char] for char in gui_subpart])
-            #         dataY.append(TOKENS__CHAR_INT[gui_list[j][i]])
-            #
-            # print("Nr. Test Sampels:", len(dataX))
-            #
-            # # reshapes X to be [samples, time steps, features]
-            # X = np.reshape(dataX, (len(dataX), MAX_LENGTH_GUI_REPRESENTATION, 1))
-            #
-            # # one hot encodes the output variable
-            # y = np_utils.to_categorical(dataY)
-            #
-            # print("Test Data Prepared")
 
     def list_all_test_guis(self, ):
         conf = self.conf
@@ -141,7 +124,6 @@ class Preprocessor:
             with open(dataset + file_name, 'r', encoding='utf8') as file_1:
                 ui_json = json.load(file_1)
                 # filter advertisements
-                # TODO more filtering
                 if conf.filter_guis & ui_json["metadata"]["is_advertisement"]:
                     self.count_filter += 1
                     continue
@@ -149,12 +131,6 @@ class Preprocessor:
                 readable_strings.append(self.abstraction2readable_string(conf, ui_json))
                 # char string is used by the langauge model
                 char_strings.append(self.abstraction2char_string(conf, ui_json))
-
-                # # Readable dataset is for debugging purposes
-                # readable_string = self.abstraction2readable_string(conf, ui_json)
-                # # char string is used by the langauge model
-                # char_string = self.abstraction2char_string(conf, ui_json)
-                #
 
         # shuffle gui data to guarantee an homogenous data set
         shuffle = list(zip(readable_strings, char_strings))
@@ -197,11 +173,6 @@ class Preprocessor:
             for element in c_test:
                 write_f.write(element + "\n")
 
-        # write_f.write(readable_string)
-        # write_f.write('\n')
-        #
-        # write_f_chars.write(char_string)
-        # write_f_chars.write('\n')
         print("Nr. Filtered: ", self.count_filter)
 
     def abstraction2readable_string(self, conf, ui_json):
