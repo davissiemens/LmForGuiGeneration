@@ -14,14 +14,14 @@ class Filter(object):
         filtered_categories = ['Entertainment']
         ui_number = int(file_name.split('.')[0])
         package_name = self.app_ui_details.loc[self.app_ui_details['UI Number'] == \
-                                         ui_number]['App Package Name'].tolist()[0]
+                                               ui_number]['App Package Name'].tolist()[0]
         category = self.app_meta_data.loc[self.app_meta_data['App Package Name'] == \
                                           package_name]['Category'].tolist()[0]
         return (category in filtered_categories)
 
     def get_category(self, ui_number: int) -> str:
         package_name = self.app_ui_details.loc[self.app_ui_details['UI Number'] == \
-                                         ui_number]['App Package Name'].tolist()[0]
+                                               ui_number]['App Package Name'].tolist()[0]
         category = self.app_meta_data.loc[self.app_meta_data['App Package Name'] == \
                                           package_name]['Category'].tolist()[0]
         return category

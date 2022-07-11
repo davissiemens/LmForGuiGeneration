@@ -27,7 +27,6 @@ class SimpleTokenizer(Tokenizer):
 
 
 class Stemming(ABC):
-
     SNOWBALL = 'snowball'
     KROVETZ = ' krovetz'
 
@@ -84,7 +83,7 @@ class Preprocessor(object):
         tokenized_text = self.tokenizer.tokenize(preproc_text)
         if remove_stopwords:
             tokenized_text = [word for word in tokenized_text
-                               if word not in self.stopwords]
+                              if word not in self.stopwords]
         if stemmed:
             stemmer = Stemming.get_stemmer(stemming)
             tokenized_text = [stemmer.stem(token)
@@ -96,7 +95,7 @@ class Preprocessor(object):
             tokenized_text = [token for token in tokenized_text
                               if Preprocessor.is_utf8(token)]
         return tokenized_text if tokenized else \
-                [self.detokenizer.detokenize(tokenized_text)]
+            [self.detokenizer.detokenize(tokenized_text)]
 
     @staticmethod
     def is_alpha(text: Text) -> bool:

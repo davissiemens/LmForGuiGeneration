@@ -27,17 +27,17 @@ class Preprocessor:
             char_string = self.abstraction2char_string(self.conf, ui_json)
             readable_string = self.abstraction2readable_string(self.conf, ui_json)
         with open(self.conf.path_preproc_text + "Y" + str(self.conf.number_splits_y) + "X" + str(
-                self.conf.number_splits_x) + "/single_guis/"+str(gui_number), 'w') as write_f:
-                write_f.write(readable_string + "\n")
-                write_f.write(char_string+ "\n")
-                write_f.write(format_to_pretty_print_without_compare(char_string))
+                self.conf.number_splits_x) + "/single_guis/" + str(gui_number), 'w') as write_f:
+            write_f.write(readable_string + "\n")
+            write_f.write(char_string + "\n")
+            write_f.write(format_to_pretty_print_without_compare(char_string))
 
     # method to identify GUIs afterwards if needed
     def find_gui_by_preprocessed_string(self, char_string):
         conf = self.conf
 
         dataset = conf.path_abstraction + "Y" + str(conf.number_splits_y) + "X" + str(conf.number_splits_x) + "/"
-        file_names=[]
+        file_names = []
         for file_name in utils.iter_files_in_dir(dataset, ending='.json'):
             with open(dataset + file_name, 'r', encoding='utf8') as file_1:
                 ui_json = json.load(file_1)
@@ -47,7 +47,6 @@ class Preprocessor:
                 if char_string == self.abstraction2char_string(conf, ui_json):
                     file_names.append(file_name)
         return file_names
-
 
     def count_test_data(self, print_data=False):
         filename = "Y" + str(self.conf.number_splits_y) + "X" + str(self.conf.number_splits_x) + "/test"
@@ -68,16 +67,15 @@ class Preprocessor:
             dataY = []
             count = 0;
             for gui in gui_list:
-                split=gui.split()
+                split = gui.split()
                 for word in split:
-                    if(len(word)==1):
-                        if(word.isnumeric()):
+                    if (len(word) == 1):
+                        if (word.isnumeric()):
                             count += 1
-                        if (word == 'A') | (word == 'B')| (word == 'C'):
-                            count +=1
+                        if (word == 'A') | (word == 'B') | (word == 'C'):
+                            count += 1
             print(count)
             return count
-
 
             # for j in range(0, len(gui_list)):
             #     for i in range(1, len(gui_list[j])):
@@ -98,24 +96,22 @@ class Preprocessor:
             #
             # print("Test Data Prepared")
 
-    def list_all_test_guis(self,):
+    def list_all_test_guis(self, ):
         conf = self.conf
         file1 = open(conf.path_preproc_text + "Y" + str(conf.number_splits_y) + "X" + str(
-                conf.number_splits_x) + "/test", 'r')
+            conf.number_splits_x) + "/test", 'r')
         Lines = file1.readlines()
-        path2target="/Users/davis/PycharmProjects/LmForGuiGeneration/gui2lm/gui2lm/resources/test_guis"
-        path2combined="/Users/davis/PycharmProjects/LmForGuiGeneration/gui2lm/gui2lm/resources/combined"
-        path2semantic="/Users/davis/PycharmProjects/LmForGuiGeneration/gui2lm/gui2lm/resources/semantic_annotations"
+        path2target = "/Users/davis/PycharmProjects/LmForGuiGeneration/gui2lm/gui2lm/resources/test_guis"
+        path2combined = "/Users/davis/PycharmProjects/LmForGuiGeneration/gui2lm/gui2lm/resources/combined"
+        path2semantic = "/Users/davis/PycharmProjects/LmForGuiGeneration/gui2lm/gui2lm/resources/semantic_annotations"
         count = 0
         names = []
         for line in Lines:
             count += 1
-            gui_nr=self.find_gui_by_preprocessed_string(line.strip()).split(".")[0]
+            gui_nr = self.find_gui_by_preprocessed_string(line.strip()).split(".")[0]
             print(gui_nr)
-            shutil.copy(path2combined+"/"+str(gui_nr)+".jpg", path2target+"/"+str(gui_nr)+".jpg")
-            shutil.copy(path2semantic+"/"+str(gui_nr)+".png", path2target+"/"+str(gui_nr)+".png")
-
-
+            shutil.copy(path2combined + "/" + str(gui_nr) + ".jpg", path2target + "/" + str(gui_nr) + ".jpg")
+            shutil.copy(path2semantic + "/" + str(gui_nr) + ".png", path2target + "/" + str(gui_nr) + ".png")
 
     def find_gui_by_readable_string(self, readable_string):
         conf = self.conf
@@ -154,11 +150,11 @@ class Preprocessor:
                 # char string is used by the langauge model
                 char_strings.append(self.abstraction2char_string(conf, ui_json))
 
-                        # # Readable dataset is for debugging purposes
-                        # readable_string = self.abstraction2readable_string(conf, ui_json)
-                        # # char string is used by the langauge model
-                        # char_string = self.abstraction2char_string(conf, ui_json)
-                        #
+                # # Readable dataset is for debugging purposes
+                # readable_string = self.abstraction2readable_string(conf, ui_json)
+                # # char string is used by the langauge model
+                # char_string = self.abstraction2char_string(conf, ui_json)
+                #
 
         # shuffle gui data to guarantee an homogenous data set
         shuffle = list(zip(readable_strings, char_strings))

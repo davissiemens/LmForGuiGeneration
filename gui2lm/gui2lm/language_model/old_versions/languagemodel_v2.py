@@ -30,8 +30,10 @@ def sample(preds, temperature=1.0):
 def perplexity(y_true, y_pred):
     # cross_entropy = tf.keras.losses.sparse_categorical_crossentropy(y_true, y_pred)
     cross_entropy = tf.keras.backend.cast(tf.keras.backend.equal(tf.keras.backend.max(y_true, axis=-1),
-                                   tf.keras.backend.cast(tf.keras.backend.argmax(y_pred, axis=-1), tf.keras.backend.floatx())),
-                           tf.keras.backend.floatx())
+                                                                 tf.keras.backend.cast(
+                                                                     tf.keras.backend.argmax(y_pred, axis=-1),
+                                                                     tf.keras.backend.floatx())),
+                                          tf.keras.backend.floatx())
     perplexity = tf.exp(tf.reduce_mean(cross_entropy))
     return perplexity
 
@@ -207,7 +209,8 @@ class LanguageModel_V2:
         model.save_weights(path2file)
         log_dir = "logs/fit/" + self.folder_name + "/" + datetime.now().strftime("%Y%m%d-%H%M%S")
         tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
-        history = model.fit(x, y, batch_size=batch_size, epochs=self.epochs, validation_data=(x_val, y_val), callbacks=[tensorboard_callback])
+        history = model.fit(x, y, batch_size=batch_size, epochs=self.epochs, validation_data=(x_val, y_val),
+                            callbacks=[tensorboard_callback])
         model.save_weights(path2file)
         self.model = model
 

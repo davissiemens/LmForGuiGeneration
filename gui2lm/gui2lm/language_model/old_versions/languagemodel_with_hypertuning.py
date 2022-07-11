@@ -86,7 +86,7 @@ class LanguageModel_WithParamTuning:
         # Deactivate for final runs
         self.test_run = True
 
-    def prepare_training_data(self, print_data = False):
+    def prepare_training_data(self, print_data=False):
         if self.test_run:
             path_to_data = self.conf.path_preproc_text_small
         else:
@@ -97,7 +97,7 @@ class LanguageModel_WithParamTuning:
             text = f.read()
             # print(text)
             gui_list = text.split("\n")
-            if(print_data):
+            if (print_data):
                 print("GUI LIST", gui_list)
                 print("Nr. GUIs for Training:", len(gui_list))
 
@@ -129,7 +129,7 @@ class LanguageModel_WithParamTuning:
 
             return text, X, y
 
-    def prepare_validation_data(self,  print_data = False):
+    def prepare_validation_data(self, print_data=False):
         # Read Text
         if self.test_run:
             path_to_data = self.conf.path_preproc_text_small
@@ -140,7 +140,7 @@ class LanguageModel_WithParamTuning:
             text = f.read()
             # print(text)
             gui_list = text.split("\n")
-            if(print_data):
+            if (print_data):
                 print("GUI LIST", gui_list)
                 print("Nr. GUIs for Training:", len(gui_list))
 
@@ -236,7 +236,6 @@ class LanguageModel_WithParamTuning:
                           directory=self.conf.path_trained_models + "/tuning/",
                           project_name=self.folder_name)
 
-
         batch_size = self.batch_size
         text, x, y = self.prepare_training_data()
         x_val, y_val = self.prepare_validation_data()
@@ -260,21 +259,19 @@ class LanguageModel_WithParamTuning:
         log_dir = "logs/fit/epochs/" + self.folder_name
         tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
         stop_early = tf.keras.callbacks.EarlyStopping(monitor='val_loss', patience=7, mode="min")
-        history = self.model.fit(x, y,batch_size=batch_size, epochs=50, validation_data=(x_val, y_val),
+        history = self.model.fit(x, y, batch_size=batch_size, epochs=50, validation_data=(x_val, y_val),
                                  callbacks=[tensorboard_callback, stop_early])
 
         val_acc_per_epoch = history.history['val_accuracy']
         best_epoch = val_acc_per_epoch.index(max(val_acc_per_epoch)) + 1
         print('Best epoch: %d' % (best_epoch,))
 
-
         self.model = tuner.hypermodel.build(best_hps)
         log_dir = "logs/fit/" + self.folder_name
         tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
-        history = self.model.fit(x, y,batch_size=batch_size, epochs=best_epoch, validation_data=(x_val, y_val),
+        history = self.model.fit(x, y, batch_size=batch_size, epochs=best_epoch, validation_data=(x_val, y_val),
                                  callbacks=[tensorboard_callback])
         print('Model Completed')
-
 
     def build_model(self):
         model = keras.Sequential()

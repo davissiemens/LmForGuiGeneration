@@ -19,7 +19,7 @@ class LabelCounter():
 
     def write_label_count_to_file_test(self, conf: Configuration):
         label_count = self.count_labels_in_dataset_test(conf)
-        with open(conf.path_count_csv+'count_labels_test.csv', 'w') as csv_file:
+        with open(conf.path_count_csv + 'count_labels_test.csv', 'w') as csv_file:
             writer = csv.writer(csv_file)
             for key, value in label_count.items():
                 writer.writerow([key, value])
@@ -39,15 +39,15 @@ class LabelCounter():
 
     def write_label_count_to_file(self, conf: Configuration):
         label_count = self.count_labels_in_dataset(conf)
-        with open(conf.path_count_csv+'count_labels.csv', 'w') as csv_file:
+        with open(conf.path_count_csv + 'count_labels.csv', 'w') as csv_file:
             writer = csv.writer(csv_file)
             for key, value in label_count.items():
                 writer.writerow([key, value])
 
-    def count_labels_in_dataset(self, conf: Configuration) -> Dict[Text,int]:
+    def count_labels_in_dataset(self, conf: Configuration) -> Dict[Text, int]:
         # unique_labels=Set[Text]
         label_count = {}
-        dataset= conf.path_semantic_all
+        dataset = conf.path_semantic_all
         for file_name in utils.iter_files_in_dir(dataset, ending='.json'):
             data = self.label_extraction_from_file(dataset, file_name, filter)
             if data is not None:
@@ -57,11 +57,9 @@ class LabelCounter():
                 # print(label_count)
         return label_count
 
-
-
     def label_extraction_from_file(self, file_path_semantic: Text,
-                                  file_name: Text,
-                                  filter: Filter) -> List[Text]:
+                                   file_name: Text,
+                                   filter: Filter) -> List[Text]:
         with open(file_path_semantic + file_name, 'r', encoding='utf8') as file_1:
             ui_json_semantic = json.load(file_1)
             try:
@@ -74,18 +72,17 @@ class LabelCounter():
                 print("AN ERROR OCCURED")
                 return None
 
-
     def write_leaf_count_to_file(self, conf: Configuration):
         label_count = self.count_leafs_in_dataset(conf)
-        with open(conf.path_count_csv+'count_leafs.csv', 'w') as csv_file:
+        with open(conf.path_count_csv + 'count_leafs.csv', 'w') as csv_file:
             writer = csv.writer(csv_file)
             for key, value in label_count.items():
                 writer.writerow([key, value])
 
-    def count_leafs_in_dataset(self, conf: Configuration) -> Dict[Text,int]:
+    def count_leafs_in_dataset(self, conf: Configuration) -> Dict[Text, int]:
         # unique_labels=Set[Text]
         label_count = {}
-        dataset= conf.path_semantic_all
+        dataset = conf.path_semantic_all
         for file_name in utils.iter_files_in_dir(dataset, ending='.json'):
             print(file_name)
             data = self.leaf_extraction_from_file(dataset, file_name, filter)
@@ -95,8 +92,6 @@ class LabelCounter():
                 label_count = utils.mergeDict(label_count, file_labels)
                 # print(label_count)
         return label_count
-
-
 
     def leaf_extraction_from_file(self, file_path_semantic: Text,
                                   file_name: Text,
@@ -130,7 +125,7 @@ class LabelCounter():
             for children in ui_json_semantic['children']:
                 self.getLeaf(children, all_leafs)
             gui = Gui(file_name, ui_json_semantic["bounds"], all_leafs)
-            abstracted_gui = AbstractedGui(gui,conf)
+            abstracted_gui = AbstractedGui(gui, conf)
             gui.formatted()
             abstracted_gui.formatted()
 

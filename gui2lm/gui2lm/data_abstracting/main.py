@@ -6,7 +6,6 @@ from gui2lm.gui2lm.data_abstracting.abstractor import Abstractor
 from gui2lm.gui2lm.data_abstracting.configuration.conf import Configuration
 from gui2lm.gui2lm.data_abstracting.filter import Filter
 
-
 # Press the green button in the gutter to run the script.
 if __name__ == '__main__':
     conf = Configuration()
@@ -28,4 +27,3 @@ if __name__ == '__main__':
     #     generator.label_extraction_from_file(conf.path_semantic, file_name, conf, filt)
     #     # print(dat
     # print('Done')
-
