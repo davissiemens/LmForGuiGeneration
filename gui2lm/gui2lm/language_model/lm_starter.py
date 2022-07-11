@@ -83,24 +83,40 @@ def write_generation_to_file(sentence, seed, forced_teaching, lstm, name, compar
 
 
 if __name__ == '__main__':
-    name = input("Enter Folder/Model Name: ")
+    # name = input("Enter Folder/Model Name: ")
+    name = "Overreach1"
+    # name2 = "V3_Run1_Train"
     conf = Configuration()
     lstm = LanguageModel_WithParamTuning(conf, name)
+    # lstm.test_model()
+    # lstm2 = LanguageModel_WithParamTuning(conf, name2)
     # lstm.train_model()
     # write_console_to_file(hypertune=True)
 
     # forced_teaching = True
     # write_generation_to_file("< 1&2&4 2&4 4 | 0 1&2 0 | 0 2 0 | 0 1&2 0 >", "", forced_teaching, lstm, name)
-    # forced_teaching = False
-    # write_generation_to_file("< 1&2&4 2&4 4 | 0 1&2 0 | 0 2 0 | 0 1&2 0 >", "< 1&2&4 2&4 4 ", forced_teaching, lstm, name)
+    forced_teaching = False
+    # write_generation_to_file("", "< 3", forced_teaching, lstm, name, False)
+    # write_generation_to_file("", "< 2", forced_teaching, lstm, name, False)
+    # write_generation_to_file("< 2&3 1 0 | 2&3 1 0 | 2&3 1 0 | 2&3 1 0 >", "< 2&3 1 0 | 2&3 1 0 |", forced_teaching, lstm, name)
+    # write_generation_to_file("< 3 1 0 | 3 1 0 | 3 1 0 | 3 1 0 >", "< 3 1 0 ", forced_teaching, lstm, name)
+    # write_generation_to_file("< 3 1 0 | 3 1 0 | 3 1 0 | 3 1 0 >", "< 3 1 0 | 3 1 0 |", forced_teaching, lstm, name)
+    # write_generation_to_file("< 2&3 1&5 2 | 3 5 2 | 4 4 4 | 4 3&4 4 >", "< 2&3 1&5 2 |", forced_teaching, lstm, name)
+    write_generation_to_file("< 1&3 1&2 1&2&3 | 1 1&2&7 2 | 1&3 1&2&3&4&6 2&3 | 1&3 2&3&B 1&2&3 >", "< 1&3 1&2 1&2&3 ", forced_teaching, lstm, name)
+    write_generation_to_file("< 1&3 1&2 1&2&3 | 1 1&2&7 2 | 1&3 1&2&3&4&6 2&3 | 1&3 2&3&B 1&2&3 >", "< 1&3 1&2 1&2&3 | 1 1&2&7 2 ", forced_teaching, lstm, name)
+    # write_generation_to_file("< 1&2&3 1 3 | 2&3 1 0 | 2&3 1 0 | 2 1&6 0 >", "< 1&2&3 1 3 | 2&3 1 0 |", forced_teaching, lstm2, name2)
     # write_generation_to_file("< 1&2&4 2&4 4 | 0 1&2 0 | 0 2 0 | 0 1&2 0 >", "< 1&2&4 2&4 4 | 0 1&2 0 |", forced_teaching, lstm, name)
     # write_generation_to_file("< 1&2&4 2&4 4 | 0 1&2 0 | 0 2 0 | 0 1&2 0 >", "< 1&2&4 2&4 4 | 0 1&2 0 | 0 2 0 |", forced_teaching, lstm, name)
 
     # forced_teaching = True
     # write_generation_to_file("< 1&3 1 4 | 0 4 0 | 0 4 0 | 0 1 0 >", "", forced_teaching, lstm, name)
-    forced_teaching = False
+    # forced_teaching = False
     # write_generation_to_file("<1&3 1 4 | 0 4 0 | 0 4 0 | 0 1 0>", "<", forced_teaching, lstm, name)
-    # write_generation_to_file("", "< ", forced_teaching, lstm, name, False)
+    # write_generation_to_file("< 0 1&4 0 | 0 4 0 | 0 4 0 | 0 4 4 >", "< 0 1&4 0 |", forced_teaching, lstm, name, True)
+    # write_generation_to_file("< 0 1&4 0 | 0 4 0 | 0 4 0 | 0 4 4 >", "< 0 1&4 0 | 0 4 0 |", forced_teaching, lstm, name, True)
+
+    # write_generation_to_file("< 1&2&3 2&3 2&3 | 2 2 2 | 2 2 2 | 2 1&2&3 2 >", "< 1&2&3 2&3 2&3 | 2 2 2 |", forced_teaching, lstm, name, True)
+    # write_generation_to_file("< 1&3 1 3 | 1 1&4 0 | 1 0 0 | 1 6 0 >", "< 1&3 1 3 | 1 1&4 0 |", forced_teaching, lstm, name, True)
     # write_generation_to_file("< 2&3 0 0 | 0 0 0 | 0 6 0 | 0 0 0 >", "< 2&3 0 0 ", forced_teaching, lstm, name, True)
     # write_generation_to_file("< 2&3 0 0 | 0 0 0 | 0 6 0 | 0 0 0 >", "< 2&3 0 0 | 0 0 0 ", forced_teaching, lstm, name, True)
     # write_generation_to_file("< 2&3 0 0 | 0 0 0 | 0 6 0 | 0 0 0 >", "< 2&3 0 0 ", forced_teaching, lstm, name, True)
@@ -110,9 +126,9 @@ if __name__ == '__main__':
     # write_generation_to_file("< 1&2&3 1 3 | 1&2&3 1 3 | 1&2&3 1&7 3 | 1&2&3 1 2&3 >", "< 1&2&3 1 3 |", False, lstm, name, True)
     # write_generation_to_file("< 1&2&3 1 3 | 1&2&3 1 3 | 1&2&3 1&7 3 | 1&2&3 1 2&3 >", "< 1&2&3 1 3 | 1&2&3 1 3", False, lstm, name, True)
     # write_generation_to_file("< 1&2&3 1 3 | 1&2&3 1 3 | 1&2&3 1&7 3 | 1&2&3 1 2&3 >", "< 1&2&3 1 3 | 1&2&3 1 3", True, lstm, name, True)
-    write_generation_to_file("< 2 1 3 | 0 0 0 | 0 6 0 | 0 0 0 >", "<", False, lstm, name, False)
-    write_generation_to_file("< 2 1 3 | 0 0 0 | 0 6 0 | 0 0 0 >", "< 2", False, lstm, name, False)
-    write_generation_to_file("< 2 1 3 | 0 0 0 | 0 6 0 | 0 0 0 >", "< 0", False, lstm, name, False)
+    # write_generation_to_file("< 2 1 3 | 0 0 0 | 0 6 0 | 0 0 0 >", "<", False, lstm, name, False)
+    # write_generation_to_file("< 2 1 3 | 0 0 0 | 0 6 0 | 0 0 0 >", "< 2", False, lstm, name, False)
+    # write_generation_to_file("< 2 1 3 | 0 0 0 | 0 6 0 | 0 0 0 >", "< 0", False, lstm, name, False)
     # write_generation_to_file("< 1&3 1 4 | 0 4 0 | 0 4 0 | 0 1 0 >", "< 1&3 1 4 | 0 4 0 |", forced_teaching, lstm, name)
     # write_generation_to_file("< 1&3 1 4 | 0 4 0 | 0 4 0 | 0 1 0 >", "< 1&3 1 4 | 0 4 0 | 0 4 0 |", forced_teaching, lstm, name)
     # write_generation_to_file("< 3 1&2 3 | 0 2&7 0 | 2&3 2 0 | 2&3&4&8 2&4&6&8 1&3&8 >", "", forced_teaching, lstm, name)

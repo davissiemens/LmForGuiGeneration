@@ -3,9 +3,11 @@ import json
 import random
 
 import numpy as np
+import shutil
 
 from gui2lm.gui2lm import utils
 from gui2lm.gui2lm.data_abstracting.configuration.conf import Configuration
+from gui2lm.gui2lm.language_model.printer import format_to_pretty_print_without_compare
 from gui2lm.gui2lm.preprocessing.tokens import Tokens
 
 
@@ -27,14 +29,15 @@ class Preprocessor:
         with open(self.conf.path_preproc_text + "Y" + str(self.conf.number_splits_y) + "X" + str(
                 self.conf.number_splits_x) + "/single_guis/"+str(gui_number), 'w') as write_f:
                 write_f.write(readable_string + "\n")
-                write_f.write(char_string)
+                write_f.write(char_string+ "\n")
+                write_f.write(format_to_pretty_print_without_compare(char_string))
 
     # method to identify GUIs afterwards if needed
     def find_gui_by_preprocessed_string(self, char_string):
         conf = self.conf
 
         dataset = conf.path_abstraction + "Y" + str(conf.number_splits_y) + "X" + str(conf.number_splits_x) + "/"
-
+        file_names=[]
         for file_name in utils.iter_files_in_dir(dataset, ending='.json'):
             with open(dataset + file_name, 'r', encoding='utf8') as file_1:
                 ui_json = json.load(file_1)
@@ -42,8 +45,77 @@ class Preprocessor:
                     self.count_filter += 1
                     continue
                 if char_string == self.abstraction2char_string(conf, ui_json):
-                    return file_name
-        return "No GUI Found"
+                    file_names.append(file_name)
+        return file_names
+
+
+    def count_test_data(self, print_data=False):
+        filename = "Y" + str(self.conf.number_splits_y) + "X" + str(self.conf.number_splits_x) + "/test"
+        with io.open(self.conf.path_preproc_text + filename, encoding="utf-8") as f:
+            text = f.read()
+            print("length total", len(text))
+            # print(text)
+            gui_list = text.split("\n")
+            if (print_data):
+                print("GUI LIST", gui_list)
+                print("Nr. GUIs for Testing:", len(gui_list))
+
+            # Read every GUI independently and pad each sample to a fixed length
+            sentence_list = []
+            next_chars_list = []
+
+            dataX = []
+            dataY = []
+            count = 0;
+            for gui in gui_list:
+                split=gui.split()
+                for word in split:
+                    if(len(word)==1):
+                        if(word.isnumeric()):
+                            count += 1
+                        if (word == 'A') | (word == 'B')| (word == 'C'):
+                            count +=1
+            print(count)
+            return count
+
+
+            # for j in range(0, len(gui_list)):
+            #     for i in range(1, len(gui_list[j])):
+            #         gui_subpart = gui_list[j][0: i].ljust(MAX_LENGTH_GUI_REPRESENTATION, "_")
+            #         sentence_list.append(gui_subpart)
+            #         next_chars_list.append(gui_list[j][i])
+            #
+            #         dataX.append([TOKENS__CHAR_INT[char] for char in gui_subpart])
+            #         dataY.append(TOKENS__CHAR_INT[gui_list[j][i]])
+            #
+            # print("Nr. Test Sampels:", len(dataX))
+            #
+            # # reshapes X to be [samples, time steps, features]
+            # X = np.reshape(dataX, (len(dataX), MAX_LENGTH_GUI_REPRESENTATION, 1))
+            #
+            # # one hot encodes the output variable
+            # y = np_utils.to_categorical(dataY)
+            #
+            # print("Test Data Prepared")
+
+    def list_all_test_guis(self,):
+        conf = self.conf
+        file1 = open(conf.path_preproc_text + "Y" + str(conf.number_splits_y) + "X" + str(
+                conf.number_splits_x) + "/test", 'r')
+        Lines = file1.readlines()
+        path2target="/Users/davis/PycharmProjects/LmForGuiGeneration/gui2lm/gui2lm/resources/test_guis"
+        path2combined="/Users/davis/PycharmProjects/LmForGuiGeneration/gui2lm/gui2lm/resources/combined"
+        path2semantic="/Users/davis/PycharmProjects/LmForGuiGeneration/gui2lm/gui2lm/resources/semantic_annotations"
+        count = 0
+        names = []
+        for line in Lines:
+            count += 1
+            gui_nr=self.find_gui_by_preprocessed_string(line.strip()).split(".")[0]
+            print(gui_nr)
+            shutil.copy(path2combined+"/"+str(gui_nr)+".jpg", path2target+"/"+str(gui_nr)+".jpg")
+            shutil.copy(path2semantic+"/"+str(gui_nr)+".png", path2target+"/"+str(gui_nr)+".png")
+
+
 
     def find_gui_by_readable_string(self, readable_string):
         conf = self.conf

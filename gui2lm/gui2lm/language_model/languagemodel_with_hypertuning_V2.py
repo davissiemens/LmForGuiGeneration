@@ -192,6 +192,49 @@ class LanguageModel_WithParamTuning:
 
             return X, y
 
+    def prepare_test_data(self, print_data=False):
+        # Read Text
+        if self.test_run:
+            path_to_data = self.conf.path_preproc_text_small
+        else:
+            path_to_data = self.conf.path_preproc_text
+        filename = "Y" + str(self.conf.number_splits_y) + "X" + str(self.conf.number_splits_x) + "/test"
+        with io.open(path_to_data + filename, encoding="utf-8") as f:
+            text = f.read()
+            # print(text)
+            gui_list = text.split("\n")
+            if (print_data):
+                print("GUI LIST", gui_list)
+                print("Nr. GUIs for Testing:", len(gui_list))
+
+            # Read every GUI independently and pad each sample to a fixed length
+            sentence_list = []
+            next_chars_list = []
+
+            dataX = []
+            dataY = []
+
+            for j in range(0, len(gui_list)):
+                for i in range(1, len(gui_list[j])):
+                    gui_subpart = gui_list[j][0: i].ljust(MAX_LENGTH_GUI_REPRESENTATION, "_")
+                    sentence_list.append(gui_subpart)
+                    next_chars_list.append(gui_list[j][i])
+
+                    dataX.append([TOKENS__CHAR_INT[char] for char in gui_subpart])
+                    dataY.append(TOKENS__CHAR_INT[gui_list[j][i]])
+
+            print("Nr. Test Sampels:", len(dataX))
+
+            # reshapes X to be [samples, time steps, features]
+            X = np.reshape(dataX, (len(dataX), MAX_LENGTH_GUI_REPRESENTATION, 1))
+
+            # one hot encodes the output variable
+            y = np_utils.to_categorical(dataY)
+
+            print("Test Data Prepared")
+
+            return X, y
+
     def hypertune_and_train_model(self):
         # Hypertune model using keras-tuner and find best:
         #   - embedding dimension for embedding layer
@@ -266,7 +309,7 @@ class LanguageModel_WithParamTuning:
         print('Model Completed')
 
     def train_model(self):
-        epochs = 6
+        epochs = 30
         batch_size = self.batch_size
         text, x, y = self.prepare_training_data()
         x_val, y_val = self.prepare_validation_data()
@@ -287,6 +330,48 @@ class LanguageModel_WithParamTuning:
                                  callbacks=[tensorboard_callback])
         self.model.save_weights(path2file)
         print('Model Trained')
+
+    def test_model(self):
+        batch_size = self.batch_size
+        x, y = self.prepare_test_data()
+        with open(self.conf.PATH_ROOT + "language_model/hyper_param/best_hp.json") as f:
+            parameters = json.load(f)
+            self.model = build_model_from_dict(parameters)
+        try:
+            # Create target Directory
+            os.mkdir(self.directory)
+            print("Directory ", self.directory, " Created ")
+        except FileExistsError:
+            print("Directory ", self.directory, " already exists")
+        self.model.load_weights(self.directory + self.name)
+        history = self.model.evaluate(x, y, batch_size=batch_size)
+        print('Model Evaluated')
+        print("test loss, test acc:", history)
+        # self.model.save_weights(path2file)
+
+    def train_model_and_save_after_every_epoch(self):
+        epochs = 30
+        batch_size = self.batch_size
+        text, x, y = self.prepare_training_data()
+        x_val, y_val = self.prepare_validation_data()
+        with open(self.conf.PATH_ROOT + "language_model/hyper_param/best_hp.json") as f:
+            parameters = json.load(f)
+            self.model = build_model_from_dict(parameters)
+        for epoch in range(epochs):
+            try:
+                # Create target Directory
+                os.mkdir(self.directory)
+                print("Directory ", self.directory, " Created ")
+            except FileExistsError:
+                print("Directory ", self.directory, " already exists")
+            path2file = self.directory + self.name + "_epoch_" + str(epoch)
+            self.model.save_weights(path2file)
+            log_dir = "logs/fit/" + self.folder_name
+            tensorboard_callback = tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1)
+            history = self.model.fit(x, y, batch_size=batch_size, epochs=epochs, validation_data=(x_val, y_val),
+                                     callbacks=[tensorboard_callback])
+            self.model.save_weights(path2file)
+            print('Epoch ' + str(epoch) + "")
 
     def generating_text(self, seed: Text, actual_sentence: Text):
         with open(self.conf.PATH_ROOT + "language_model/hyper_param/best_hp.json") as f:
@@ -399,12 +484,12 @@ class LanguageModel_WithParamTuning:
                 next_index = sample(prediction, diversity)
                 next_char_pred = TOKENS__INT_CHAR[next_index]
 
-                if (next_char_pred==" ") & (next_char!=" "):
+                if (next_char_pred == " ") & (next_char != " "):
                     while next_char != " ":
                         i += 1
                         next_char = sentence[i]
 
-                if (next_char_pred!=" ") & (next_char==" "):
+                if (next_char_pred != " ") & (next_char == " "):
                     while next_char_pred != " ":
                         generated += next_char_pred
 
@@ -437,14 +522,14 @@ class LanguageModel_WithParamTuning:
 
             cubes = sentence.split(Tokens().token2char[Tokens().split])
             seed = cubes[0] + Tokens().token2char[Tokens().split]
-            generated = Tokens().token2char[Tokens().start_token]+Tokens().token2char[Tokens().split]
+            generated = Tokens().token2char[Tokens().start_token] + Tokens().token2char[Tokens().split]
             next_char = ""
 
             print('...Forced teaching with Sentence: "' + sentence + '"')
             for cube in cubes[1:len(cubes)]:
                 i = 0
                 generated_cube = ""
-                seed_plus_generated_cube = (seed+generated_cube).ljust(MAX_LENGTH_GUI_REPRESENTATION, "_")
+                seed_plus_generated_cube = (seed + generated_cube).ljust(MAX_LENGTH_GUI_REPRESENTATION, "_")
                 while next_char != Tokens().token2char[Tokens.split]:
                     pattern = [[TOKENS__CHAR_INT[char] for char in seed_plus_generated_cube]]
                     x = numpy.reshape(pattern, (1, MAX_LENGTH_GUI_REPRESENTATION, 1))
@@ -453,7 +538,7 @@ class LanguageModel_WithParamTuning:
                     next_char = TOKENS__INT_CHAR[next_index]
                     generated_cube += next_char
 
-                    seed_plus_generated_cube = (seed+generated_cube).ljust(MAX_LENGTH_GUI_REPRESENTATION, "_")
+                    seed_plus_generated_cube = (seed + generated_cube).ljust(MAX_LENGTH_GUI_REPRESENTATION, "_")
                 seed += cube + Tokens().token2char[Tokens().split]
                 generated += generated_cube
                 next_char = ""
