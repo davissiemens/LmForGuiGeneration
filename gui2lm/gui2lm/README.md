@@ -1,30 +1,34 @@
 # GUI Generation via Language Modeling 
+We create a GUI generation framework based on language modeling in this work. It consists of the following classes and dictionaries:
+- **configuration**: Contains the configuration class including file paths and abstraction settings
+- **data_abstracting**: Abstractor to process the RICO dataset into the GUI-Abstraction dataset. 
+  It contains the main class abstractor.py and multiple helper classes. Filter.py is used to filter GUIs based on their attributes.
+  labelcounter.py counts the number of GUI element classes in the dataset. In the guiclasses-directory classes representing GUIs and GUI-elements can be found. 
+- **language_model**: Contains the implementation of the language model. Languagemodel_with_hypertuning_V2.py is the 
+  main class implementing the language model. lm_optimizer.py creates a new language model and finds its best hyperparameters if started. 
+  However, one has to keep in mind that this is a very computational intensive step. printer.py is a helper class to create and store pretty prints. 
+  - **console_output**: "hypertune_standard-model" contains the ouput for the hypertune process described in the paper
+  - **hpyer_param**: stored best hyperparameter values
+  - **logs**: tensorboard log files
+  - **text_generations**: here the GUI generations of the language models gets stored
+- **models**: Contains the weights of the trained models. The standard model is stored as "Overreach1". 
+- **preprocessing**: Contains the preprocessor.py which translates the abstracted GUI dataset to GUI-language dataset. 
+  The preprocessor.py skript contains various helper functions to ,e.g., translate only single abstraction, find a GUIs 
+  number by it's char string etc. Token.py represents the vocabulary of the GUI-language. 
+- **ressources**: Contains the datasets. Please add required datasets as described in the prerequisites before first time use. 
+  - **abstractions**: Contains .json files of abstracted GUIs
+  - **preprocessed**: Contains readable and char strings of the GUI-language dataset. 
+- **main.py** Main skript to preprocess dataset, train the model or generate GUIs. Instructions are given within the skript. 
 
+## Prerequisites 
+To make sure the program is fully executable following steps must be taken. 
+- **Dataset**: Please add the RICO datasets, which can be downloaded from the following website:
+    https://interactionmining.org/rico. The datasets *"UI Screenshots and View Hierarchies"* must be added to 
+    the "resources/combined" folder; *"UI Screenshots and Hierarchies with Semantic Annotations"* to the "resources/semantic_annotations" 
+    folder. The two CSV files *"UI Metadata"* and *"Play Store Metadata"* need to be provided in this directory as well.
+- **Tensorflow & keras**: For this project the tensoflow, the keras as well as the tensorboard package must be installed. 
+- **Configuration**: Before start, the root path in configuration.py must be configured accordingly (see comments in configuration.py).
 
-
-- **preprocessing**: Contains the Python scripts that are related to text preprocessing (preprocess.py), text
-  extraction (extraction.py) and filtering (filter.py)
-
-- **retrieval**: Contains all Python scripts implementing the different retrieval functions and the main script (
-  retriever.py)
-
-    - **configuration**: Contains the configuration class to set and save different configuration settings
-
-    - **ranker**: Contains the implementations for the different IR ranking methods (TF-IDF, BM25, nBOW). In addition,
-      it contains the weighted variants of the BM25 ranking model. However, the BERT-LTR models are trained outside of
-      this framework using the Tensorflow-Ranking BERT-Extension and the predictions are read from the generated
-      prediction files in a Ranker to fit in our evaluation framework.
-
-    - **query_expansion**: Contains the four different PRF-KLD AQE methods based on the BM25 base ranking model
-
-- **evaluation**: Contains the Python scripts used for the evaluation of our approach. In particular, it contains the
-  ranking metrics implementations used to compute the ranking metric values *AveP*, *MRR*, *P@k*, *HITS@k* and the *
-  NDCG@k* (rank_metrics.py). In addition, it contains the script for computing the results for the considered ranking
-  models over the GUI retrieval gold standard (analysis.py). For the creation of the gold standard, it contains the
-  Python script to randomly sample GUIs from the Rico dataset as the basis for writing queries (batch_generator.py) and
-  the Python script to compute the top-k retrieval results from the ranking models (pooling_generator.py).
-
-- **resources**: Contains the downloading and installation guides for the necessary resource files employed in our
-  approach. Due to the large size of the respective resource files, we needed to omit them in this repository. However,
-  all of these files are publicly available such as all files related to Rico GUIs, pretrained dense word embeddings (
-  word2vec) and the pretrained BERT-base language model.
+## Generating GUIs
+To start the language model, the main.py skript can be used. The skript also includes instructions to start the abstractor and preprocessor,
+as well as to train a new language model. This is only required if the grid structure in the configuration.py is changed. 
