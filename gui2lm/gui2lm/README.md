@@ -8,7 +8,7 @@ We create a GUI generation framework based on language modeling in this work. It
   main class implementing the language model. lm_optimizer.py creates a new language model and finds its best hyperparameters if started. 
   However, one has to keep in mind that this is a very computational intensive step. printer.py is a helper class to create and store pretty prints. 
   - **console_output**: "hypertune_standard-model" contains the ouput for the hypertune process described in the paper
-  - **hpyer_param**: stored best hyperparameter values
+  - **hyper_param**: stored best hyperparameter values
   - **logs**: tensorboard log files
   - **text_generations**: here the GUI generations of the language models gets stored
 - **models**: Contains the weights of the trained models. The standard model is stored as "Overreach1". 
@@ -18,7 +18,7 @@ We create a GUI generation framework based on language modeling in this work. It
 - **ressources**: Contains the datasets. Please add required datasets as described in the prerequisites before first time use. 
   - **abstractions**: Contains .json files of abstracted GUIs
   - **preprocessed**: Contains readable and char strings of the GUI-language dataset. 
-- **main.py** Main skript to preprocess dataset, train the model or generate GUIs. Instructions are given within the skript. 
+- **main.py:** Main skript to preprocess dataset, train the model or generate GUIs. Instructions are given within the skript. 
 
 ## Prerequisites 
 To make sure the program is fully executable following steps must be taken. 
@@ -26,7 +26,7 @@ To make sure the program is fully executable following steps must be taken.
     https://interactionmining.org/rico. The datasets *"UI Screenshots and View Hierarchies"* must be added to 
     the "resources/combined" folder; *"UI Screenshots and Hierarchies with Semantic Annotations"* to the "resources/semantic_annotations" 
     folder. The two CSV files *"UI Metadata"* and *"Play Store Metadata"* need to be provided in this directory as well.
-- **Tensorflow & keras**: For this project the tensoflow, the keras as well as the tensorboard package must be installed. 
+- **Tensorflow & Keras**: For this project the tensoflow, the keras as well as the tensorboard package must be installed. 
 - **Configuration**: Before start, the root path in configuration.py must be configured accordingly (see comments in configuration.py).
 
 ## Generating GUIs
