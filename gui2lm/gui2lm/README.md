@@ -1,6 +1,6 @@
 # GUI Generation via Language Modeling 
 We create a GUI generation framework based on language modeling in this work. It consists of the following classes and dictionaries:
-- **configuration**: Contains the configuration class including file paths and abstraction settings
+- **configuration**: Contains the configuration class including file paths and abstraction settings.
 - **data_abstracting**: Abstractor to process the RICO dataset into the GUI-Abstraction dataset. 
   It contains the main class abstractor.py and multiple helper classes. Filter.py is used to filter GUIs based on their attributes.
   labelcounter.py counts the number of GUI element classes in the dataset. In the guiclasses-directory classes representing GUIs and GUI-elements can be found. 

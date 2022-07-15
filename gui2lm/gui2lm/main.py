@@ -42,5 +42,5 @@ if __name__ == '__main__':
     original_gui = "< 1&2&3 1 3 | 2&3 1 0 | 2&3 1 0 | 2 1&6 0 >"
     seed = "< 1&2&3 1 3"
 
-    # writes text generations to gui2lm/gui2lm/language_model/text_generations, with filename as name
+    # writes text generations to gui2lm/gui2lm/language_model/text_generations/[Name of Model], with filename as name
     write_generation_to_file(original_gui, seed, forced_teaching, lstm, name, compare_to_original_gui)
